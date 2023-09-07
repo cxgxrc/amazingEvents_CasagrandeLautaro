@@ -1,7 +1,24 @@
 const cardContainer = document.getElementById("cardss")
+let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
+let data = []
 
+async function traerDatos(){
+    try {
+     const response = await fetch(dataUrl);
+     console.log(response)
+     const jsData = await response.json();
+     let date = jsData.currentDate;
+     let data = jsData.events;
+     displayCards(data, cardContainer, date)
+     
+    } 
+    catch(error) {
+     console.log(error);
+    }
+ 
+ }
 
-
+ traerDatos()
 
 function displayCards(cardArray, printSpaceHtml, date) {
 	let stringCardsHtml = ""
@@ -29,4 +46,3 @@ return `<div class="card col-12 p-3 m-3 " style="width: 18rem;">
 }
 
 
-displayCards(data.events, cardContainer, data.currentDate)
