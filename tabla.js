@@ -2,14 +2,15 @@ let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
 let data = []
 let assistances = []
 let capacitys = []
-let maxCapacity = 0
+let orderedCapacity = []
 let percentage = []
 let finalPercentage = 0
-let min = 0
-let max = 0
+let min = []
+let max = []
+let reduc = []
 
 const tabla = document.querySelector('#tabla')
-console.log("🚀 ~ file: tabla.js:5 ~ capacitys:", capacitys)
+
 
 
 
@@ -22,20 +23,43 @@ async function primerTabla(){
      console.log(response)
      const jsData = await response.json();
      let data = jsData.events
-     let capacitys = data.map( item => item.capacity)
-     let maxCapacity = Math.max (...capacitys)
-     console.log("🚀 ~ file: tabla.js:27 ~ traerDatos ~ maxCapacity:", maxCapacity)
-     console.log("🚀 ~ file: tabla.js:26 ~ traerDatos ~ capacitys:", capacitys)
-     let assistances = data.map( item => item.assistance)
+     
 
+    //  map
+     let capacitys = data.map( item => item.capacity)
+     let assistances = data.map( item => item.assistance)
      calcPercentages(capacitys, assistances)
      
-     let html = ''
-    let min = Math.min(...percentage)
-    let max = Math.max(...percentage)
+    //  Capacity
+     let orderedCapacity = (capacitys.sort(function(a, b){return a - b})).reverse()
+     let fCapacity = (data.find((element) => element.capacity == orderedCapacity[0])).name;
+     let sCapacity = (data.find((element) => element.capacity == orderedCapacity[1])).name;
+     let tCapacity = (data.find((element) => element.capacity == orderedCapacity[2])).name;
+     
+    //  Assistance
+     let min = percentage.sort(function(a, b){return a - b})
+     let fMin = (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == min[0])).name;
+    let sMin = (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == min[1]) && element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == min[0])).name)).name;
+     let max =  min.reverse();
+     
+ 
+    //  let min = Math.min(...percentage)
+    //  let max = Math.max(...percentage)
     
-   
+     
+     let fMax = (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == max[0])).name;
+     let sMax = (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == max[1]) && element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == max[0])).name)).name;
+    // let tMax = (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == max[2]) && (element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == max[0])).name)).name) && (element.name !== (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == max[1]) && (element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == max[0])).name))).name ).name;
+
+    //  let reduc = data.filter((element) => element.name = maxOne );
+    //  console.log("🚀 ~ file: tabla.js:42 ~ primerTabla ~ reduc:", reduc)
+    //  let sMax = (data.find((element) => element = max[1])).name;
     
+     
+     
+     
+    // Print
+    let html = ''
     html += `<tr>
     <th colspan="3" class="bg-black text-white fs-3 ">Events Statistics</th>
   </tr>
@@ -45,9 +69,19 @@ async function primerTabla(){
     <td>Larger capacity</td>
   </tr>
   <tr>
-    <td>${max}</td>
-    <td>${min}</td>
-    <td>${maxCapacity}</td>
+    <td>${fMax}</td>
+    <td>${fMin}</td>
+    <td>${fCapacity}</td>
+  </tr>
+  <tr>
+    <td>${sMax}</td>
+    <td>${sMin}</td>
+    <td>${sCapacity}</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td>${tCapacity}</td>
   </tr>`
 
     tabla.innerHTML = html
@@ -99,6 +133,8 @@ function calcPercentages(arrayCapacity, arrayAssistance) {
 
 //     tabla.innerHTML = html
 // }
+
+
 
 
 
