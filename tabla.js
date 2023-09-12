@@ -8,6 +8,21 @@ let finalPercentage = 0
 let min = []
 let max = []
 let reduc = []
+// categories
+
+let race = []
+let raceRevenues = []
+let books = []
+let cinema = []
+let cinemaRevenues = []
+let museum = []
+let food = []
+let concert = []
+let party = []
+let past = []
+let future = []
+let gananciaPast = 0
+let assistancePast = 0
 
 const tabla = document.querySelector('#tabla')
 
@@ -23,6 +38,8 @@ async function primerTabla(){
      console.log(response)
      const jsData = await response.json();
      let data = jsData.events
+     const date = jsData.currentDate
+     
      
 
     //  map
@@ -39,7 +56,7 @@ async function primerTabla(){
     //  Assistance
      let min = percentage.sort(function(a, b){return a - b})
      let fMin = (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == min[0])).name;
-    let sMin = (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == min[1]) && element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == min[0])).name)).name;
+     let sMin = (data.find((element) => (Math.round(element.assistance/(element.capacity/100)) == min[1]) && element.name !== (data.find((element) => Math.round(element.assistance/(element.capacity/100)) == min[0])).name)).name;
      let max =  min.reverse();
      
  
@@ -55,7 +72,17 @@ async function primerTabla(){
     //  console.log("🚀 ~ file: tabla.js:42 ~ primerTabla ~ reduc:", reduc)
     //  let sMax = (data.find((element) => element = max[1])).name;
     
-     
+     separarCategoria(data, cinema, 'Cinema')
+     cateogoriesTable(data, date, cinemaRevenues)
+     console.log("🚀 ~ file: tabla.js:75 ~ primerTabla ~ cinemaRevenues:", cinemaRevenues)
+     separarCategoria(data, books, 'Books')
+     separarCategoria(data, race, 'Race')
+     cateogoriesTable(race, date, raceRevenues)
+     console.log("🚀 ~ file: tabla.js:76 ~ primerTabla ~ raceRevenues:", raceRevenues)
+     separarCategoria(data, museum, 'Museum')
+     separarCategoria(data, food, 'Food')
+     separarCategoria(data, concert, 'Concert')
+     separarCategoria(data, party, 'Party')
      
      
     // Print
@@ -133,6 +160,50 @@ function calcPercentages(arrayCapacity, arrayAssistance) {
 
 //     tabla.innerHTML = html
 // }
+
+
+// por catogoria
+
+function separarCategoria(datos, nuevoArray, selectedCategory){
+  for (let i = 0; i < datos.length; i++) {
+    if (datos[i].category == selectedCategory)
+    nuevoArray.push(datos[i])
+  }
+}
+
+
+
+  
+function cateogoriesTable(array, date, newArray) {
+  let future = array.filter((element) => element.date > date);
+  calculoGanacia(future, false, newArray)
+  let past = array.filter((element) => element.date < date);
+  calculoGanacia(past, true, newArray)
+}
+    
+  
+function calculoGanacia(array, pastOrFuture, newArray) {
+  if (pastOrFuture = true) {
+    for (let index = 0; index < array.length; index++) {
+      let gananciaPast =+ (array[index].price * array[index].estimate) 
+    }
+    // let gananciaPast = array.reduce((accumulator, element) => accumulator + (element.price * element.estimate ), 0)
+    // let assistancePast = array.reduce((accumulator, element) => accumulator + (Math.round((element.assistance)/(element.capacity / 100), 0)))
+    for (let index = 0; index < array.length; index++) {
+      let assistancePast =+ (Math.round((array[index].assistance)/(array[index].capacity / 100)))
+    
+    }
+    newArray.push(gananciaPast, assistancePast) 
+  }
+
+  else if (pastOrFuture != false) {
+    let ganananciaFuture = array.reduce((accumulator, element) => accumulator + (element.price * element.assistance ), 0)
+    let assistanceFuture = array.reduce((accumulator, element) => accumulator + (Math.round(element.estimate/(element.capacity/100), 0)))
+    newArray.push(ganananciaFuture, assistanceFuture)
+  }
+  
+   
+}
 
 
 
