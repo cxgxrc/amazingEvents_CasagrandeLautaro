@@ -1,6 +1,30 @@
 const cardContainer = document.getElementById("cardss")
 let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
 let data = []
+const buttonFood = document.getElementById('food')
+// let foodActive = true;
+// buttonFood.addEventListener("click", () => {
+//     let foodActive = false
+
+//     )
+// }
+
+const buttonRace = document.getElementById('race')
+const buttonBooks = document.getElementById('books')
+const buttonMuseum = document.getElementById('museum')
+const buttonConcert = document.getElementById('concert')
+const buttonCinema = document.getElementById('cinema')
+const buttonParty = document.getElementById('party')
+
+const active = {
+    race: true,
+    food: true,
+    books: true,
+    concert: true,
+    cinema: true,
+    party: true,
+    museum: true,
+}
 
 async function traerDatos(){
    try {
@@ -24,9 +48,10 @@ traerDatos()
 
 
 
-function displayCards(cardArray, printSpaceHtml) {
+function displayCards(cardArray, printSpaceHtml, arrayCategory) {
 	let stringCardsHtml = ""
 	for (element of cardArray) {
+        
 		stringCardsHtml += createCard(element)
 	}
 	printSpaceHtml.innerHTML = stringCardsHtml
@@ -47,5 +72,15 @@ return `<div class="card col-12 p-3 m-3 " style="width: 18rem;">
         </div> `
 }
 
+
+
+function filterCategories(array, valorActive){
+    if (active.valorActive == true) {
+        
+    }
+    else {
+        // display none
+    }
+}
 
 
