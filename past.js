@@ -1,8 +1,10 @@
 const cardContainer = document.getElementById("cardss")
 const btnsContainer = document.getElementById("btns")
+const searchInput = document.querySelector('input[name=search]')
 let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
 let data = []
 let categories = []
+let checkbox;
 
 async function traerDatos(){
     try {
@@ -13,6 +15,8 @@ async function traerDatos(){
      let data = jsData.events;
      determinateCategories(data, categories)
      renderBtns(categories)
+     checkbox = document.querySelectorAll('.form-check-input')
+     filtrar()
      displayCards(data, cardContainer, date)
      
     } 
@@ -63,9 +67,16 @@ function renderBtns(categories) {
     let htmlbtns = ''
     categories.forEach(element => {
         htmlbtns += `<div class="form-check form-switch col-6 col-lg-2">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <input class="form-check-input" value="${element}" type="checkbox" role="switch" id="flexSwitchCheckDefault">
         <label class="form-check-label" for="flexSwitchCheckDefault">${element}</label>
     </div>`
     btnsContainer.innerHTML = htmlbtns
     });
+}
+
+
+function filtrar() {
+    let search = searchInput.value;
+    let checked = Array.from(checkbox).filter(item => item.checked).map(item => item.value)
+    console.log(search, checked)
 }
