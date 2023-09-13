@@ -1,6 +1,8 @@
 const cardContainer = document.getElementById("cardss")
+const btnsContainer = document.getElementById("btns")
 let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
 let data = []
+let categories = []
 
 async function traerDatos(){
     try {
@@ -9,6 +11,8 @@ async function traerDatos(){
      const jsData = await response.json();
      let date = jsData.currentDate;
      let data = jsData.events;
+     determinateCategories(data, categories)
+     renderBtns(categories)
      displayCards(data, cardContainer, date)
      
     } 
@@ -46,3 +50,22 @@ return `<div class="card col-12 p-3 m-3 " style="width: 18rem;">
 }
 
 
+function determinateCategories(arrayEventos, arrayNueva) {
+    for (let index = 0; index < arrayEventos.length; index++) {
+        if(arrayNueva.includes(arrayEventos[index].category) != true) {
+            arrayNueva.push(arrayEventos[index].category)
+        }
+        
+    }
+}
+
+function renderBtns(categories) {
+    let htmlbtns = ''
+    categories.forEach(element => {
+        htmlbtns += `<div class="form-check form-switch col-6 col-lg-2">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">${element}</label>
+    </div>`
+    btnsContainer.innerHTML = htmlbtns
+    });
+}
