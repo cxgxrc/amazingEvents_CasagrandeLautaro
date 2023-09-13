@@ -1,4 +1,5 @@
 let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
+let categories = []
 
 
 
@@ -9,6 +10,7 @@ async function traerDatos(callback){
      let data = jsData.events
      let date = jsData.currentDate;
      
+     
      callback(data, date);
     } 
     catch(error) {
@@ -16,3 +18,5 @@ async function traerDatos(callback){
     }
  
  }
+
+
