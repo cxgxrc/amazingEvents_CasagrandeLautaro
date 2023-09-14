@@ -1,10 +1,15 @@
 const cardContainer = document.getElementById("cardss")
 const btnsContainer = document.getElementById("btns")
 const searchInput = document.querySelector('input[name=search]')
+
 let dataUrl = "https://mindhub-xj03.onrender.com/api/amazing";
+
 let data = []
 let categories = []
-let checkbox;
+let checkbox = document.querySelectorAll('.form-check-input')
+let pastEvents = []
+let filterEvents = []
+let eventCategories = []
 
 async function traerDatos(){
     try {
@@ -13,11 +18,11 @@ async function traerDatos(){
      const jsData = await response.json();
      let date = jsData.currentDate;
      let data = jsData.events;
-     determinateCategories(data, categories)
+     createPastEvents(data, date)
+     determinateCategories(pastEvents, categories)
      renderBtns(categories)
-     checkbox = document.querySelectorAll('.form-check-input')
-     filtrar()
-     displayCards(data, cardContainer, date)
+     
+     filtrar(pastEvents)
      
     } 
     catch(error) {
@@ -28,13 +33,26 @@ async function traerDatos(){
 
  traerDatos()
 
-function displayCards(cardArray, printSpaceHtml, date) {
+ document.addEventListener('change', e=>{
+    if (e.target.classList.contains('form-check-label')) {
+        filtrar(pastEvents);
+        
+    }
+});
+
+
+
+searchInput.addEventListener('input', () => {
+    filtrar(pastEvents);
+});
+
+function displayCards(cardArray, printSpaceHtml) {
 	let stringCardsHtml = ""
 	for (element of cardArray) {
-        if (date > element.date) { 
+        // if (date > element.date) { 
 		stringCardsHtml += createCard(element)
         }
-	}
+	
 	printSpaceHtml.innerHTML = stringCardsHtml
 }
 
@@ -75,8 +93,45 @@ function renderBtns(categories) {
 }
 
 
-function filtrar() {
+function filtrar(pastEvents) {
     let search = searchInput.value;
     let checked = Array.from(checkbox).filter(item => item.checked).map(item => item.value)
     console.log(search, checked)
+    let filterEvents = pastEvents.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+    if (checked.length > 0) {
+        filterEvents = filterEvents.filter(i => {
+            let eventCategories = i.category.map(item => item.category.name);
+            return checked.some(item => eventCategories.includes(item));
+        });
+    }
+        displayCards(filterEvents, cardContainer)
+        console.log(filterEvents)
+
+    }
+
+
+function createPastEvents(arrayOfEvents, date) {
+    for (element of arrayOfEvents) {
+        if (date > element.date) {
+            pastEvents.push(element)
+        }
+    }
+    
 }
+
+
+// Filtro idea
+// function filtrar(pastEvents) {
+//     let search = searchInput.value;
+//     let checked = Array.from(checkbox).filter(item => item.checked).map(item => item.value)
+//     console.log(search, checked)
+//     let filterEvents = pastEvents.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+//     if (checked.length > 0) {
+//         for (let index = 0; index < checked.length; index++) {
+//             let filterEevents =- filterEvents.filter(item => item.category == checked)
+            
+//         }
+//         displayCards(filterEvents, cardContainer)
+//         console.log(filterEvents)
+
+//     }
